@@ -1,21 +1,5 @@
 import numpy as np
-A = np.array([[0.0, 5.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-              [3.0, 0.0, 2.0, 0.0, 1.0, 0.0, 4.0, 0.0, 0.0, 0.0],
-              [0.0, 0.0, 0.0, 4.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0],
-              [1.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0],
-              [0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0],
-              [0.0, 0.0, 0.0, 0.0, 4.0, 0.0, 0.0, 2.0, 0.0, 0.0],
-              [0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 3.0, 0.0, 0.0],
-              [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 4.0],
-              [0.0, 0.0, 0.0, 3.0, 0.0, 5.0, 0.0, 0.0, 0.0, 2.0],
-              [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5.0, 0.0, 4.0, 0.0],
-              ])
-
-
-"collonne lien entrant, ligne lien sortant"
-v = np.array([0.0219, 0.0325, 0.0373, 0.1099, 0.459, 0.0331, 0.0296, 0.1356, 0.0134, 0.1277])
-alpha = 0.9
-
+import networkx as nx
 
 
 def pageRankLinear (A,alpha,v):
@@ -58,8 +42,8 @@ def pageRankLinear (A,alpha,v):
 
 def pageRankPower (A, alpha, v):
     """
-    – Input : Une matrice d’adjacence A d’un graphe dirigé, pondéré et régulier G, un vecteur de personnalisation v, ainsi qu’un paramètre de téléportation α compris entre 0
-    et 1, α ∈]0,1[ (0.9 par défaut et pour les résultats à présenter).
+    – Input : Une matrice d’adjacence A d’un graphe dirigé, pondéré et régulier G, un vecteur de personnalisation v, 
+    ainsi qu’un paramètre de téléportation α compris entre 0 et 1, α ∈]0,1[ (0.9 par défaut et pour les résultats à présenter).
     – Output : Un vecteur x contenant les scores d’importance des noeuds ordonnés dans
     le même ordre que la matrice d’adjacence.
     """
@@ -86,3 +70,27 @@ def pageRankPower (A, alpha, v):
             print(x)
             return x
         v = x
+
+if __name__ == "__main__":
+    A = np.array([
+                [0.0, 5.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                [3.0, 0.0, 2.0, 0.0, 1.0, 0.0, 4.0, 0.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0, 4.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0],
+                [1.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0],
+                [0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0, 0.0, 4.0, 0.0, 0.0, 2.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 3.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 4.0],
+                [0.0, 0.0, 0.0, 3.0, 0.0, 5.0, 0.0, 0.0, 0.0, 2.0],
+                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5.0, 0.0, 4.0, 0.0],
+                ])
+
+    v = np.array([0.0219, 0.0325, 0.0373, 0.1099, 0.459, 0.0331, 0.0296, 0.1356, 0.0134, 0.1277])
+    alpha = 0.9
+    G = nx.from_numpy_matrix(A, create_using=nx.DiGraph)
+    print(G)
+    v_dict = {0: 0.0219, 1: 0.0325, 2: 0.0373, 3: 0.1099, 4: 0.459, 5: 0.0331, 6: 0.0296, 7: 0.1356, 8: 0.0134, 9: 0.1277}
+
+    print(f"\nPageRankLinear results:{pageRankLinear(A, alpha, v)}\n") 
+    print(f"PageRankPower results:{pageRankPower(A, alpha, v)}\n")
+    print(f"Networkx PageRank function results:{nx.pagerank(G, alpha=alpha, personalization=v_dict)}\n")
