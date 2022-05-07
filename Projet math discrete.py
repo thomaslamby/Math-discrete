@@ -41,27 +41,31 @@ def pageRankLinear (A,alpha,v):
 
 
 def pageRankPower (A, alpha, v):
+    def pageRankPower (A, alpha, v):
     """
     – Input : Une matrice d’adjacence A d’un graphe dirigé, pondéré et régulier G, un vecteur de personnalisation v, 
     ainsi qu’un paramètre de téléportation α compris entre 0 et 1, α ∈]0,1[ (0.9 par défaut et pour les résultats à présenter).
     – Output : Un vecteur x contenant les scores d’importance des noeuds ordonnés dans
     le même ordre que la matrice d’adjacence.
     """
+    e = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    arg = 0
     n = len(A)
-    x = v
+    x = v/np.linalg.norm(v, 1)
     P = A
     iteration = 500000
-    epsilon = 0.005
+    epsilon = 10**(-16)
     for i in range(n):
         sum = 0
         for j in range(n):
             sum += A[i][j]
         P[i] = A[i]/sum
-    G = alpha * P + (1-alpha)/n * v
+    G = (alpha * P) + (1-alpha) * (e * v.T)
     print(P)
     print(G)
     for i in range(iteration):
-        x = G @ x
+        x = x @ G 
+        x = x /np.linalg.norm(x, 1)
         if i < 3:
             print(x)
         if np.linalg.norm(x-v, 1) < epsilon:
@@ -70,6 +74,7 @@ def pageRankPower (A, alpha, v):
             print(x)
             return x
         v = x
+
 
 if __name__ == "__main__":
     A = np.array([
